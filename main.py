@@ -27,9 +27,9 @@ class ImageOutput(BaseModel):
     image_link: str
 
 
-# @app.get("/")
-# def read_root():
-#     return {"Hello": "World"}
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 
 # @app.get("/items/{item_id}")
