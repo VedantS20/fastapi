@@ -101,3 +101,8 @@ def predict_image_link(image: ImageText):
 
 # # Results match those from the CPU device after the warmup pass.
 # image = pipe(prompt).images[0]
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
