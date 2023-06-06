@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from gradio_client import Client
 import os
 from fastapi.responses import FileResponse
+from diffusers import DiffusionPipeline
 app = FastAPI()
 
 # # Load the Hugging Face model
@@ -52,12 +53,10 @@ def read_root():
 #     print("hitting")
 #     return {"image_link": result}
 
-# from fastapi import FastAPI
-# from pydantic import BaseModel
-# from runway import Client
 
 app = FastAPI()
-client = Client("https://vedant20-runwayml-stable-diffusion-v1-5.hf.space/")
+client = Client.duplicate("runwayml/stable-diffusion-v1-5", hf_token="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") 
+# client = Client("https://vedant20-runwayml-stable-diffusion-v1-5.hf.space/")
 
 
 class ImageText(BaseModel):
@@ -84,6 +83,29 @@ def predict_image_link(image: ImageText):
     # os.remove(result)
     return res
     # return {"image_link": image_url}
+
+
+@app.post("/model")
+def predict_by_model(image: ImageText):
+    # result = client.predict(image.image_text, api_name="/predict")
+    # res =  FileResponse(result, media_type="image/jpeg")
+    pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+    pipe = pipe.to("mps")
+
+    # Recommended if your computer has < 64 GB of RAM
+    pipe.enable_attention_slicing()
+
+    prompt = image.image_text
+    # First-time "warmup" pass if PyTorch version is 1.13 (see explanation above)
+    _ = pipe(prompt, num_inference_steps=1)
+
+    # Results match those from the CPU device after the warmup pass.
+    imageRes = pipe(prompt).images[0]
+    print(imageRes)
+    # os.remove(result)
+    return imageRes
+
+
 
 
 
