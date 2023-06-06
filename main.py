@@ -55,8 +55,8 @@ def read_root():
 
 
 app = FastAPI()
-client = Client.duplicate("runwayml/stable-diffusion-v1-5", hf_token="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") 
-# client = Client("https://vedant20-runwayml-stable-diffusion-v1-5.hf.space/")
+# client = Client.duplicate("runwayml/stable-diffusion-v1-5", hf_token="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") 
+client = Client("https://vedant20-runwayml-stable-diffusion-v1-5.hf.space/")
 
 
 class ImageText(BaseModel):
